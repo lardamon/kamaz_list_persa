@@ -31,6 +31,14 @@
 
   --radius: 0px;
   --pad: 14px;
+    /* ===== ЕДИНЫЙ СТИЛЬ ЦИФР ===== */
+  --numBoy: 28px;         /* общий размер цифр в "Бой" (и input, и auto) */
+  --numBoyAtk: 18px;      /* цифры/текст в быстрых атаках */
+  --numAbil: 32px;        /* основная характеристика (значение) */
+  --numGlow1: rgba(255,223,143,.18);
+  --numGlow2: rgba(255,106,31,.22);
+  --numGlow3: rgba(255,43,22,.14);
+
 }
 
 *{box-sizing:border-box}
@@ -91,8 +99,15 @@ a,button,input,textarea,select{ touch-action: manipulation; }
       rgba(255,43,22,.00) 0 22px,
       rgba(255,43,22,.06) 22px 23px,
       rgba(255,43,22,.00) 23px 46px),
+
+    /* верхняя "дымка" рамки */
     linear-gradient(180deg, rgba(255,255,255,.03), rgba(0,0,0,.34)),
-    linear-gradient(180deg, var(--stone1), var(--stone0));
+
+    /* ПОЛУПРОЗРАЧНАЯ подложка рамки (это и есть "прозрачность") */
+    linear-gradient(180deg, rgba(22,9,10,.74), rgba(12,7,8,.74)),
+
+    /* БЭКГРАУНД ВНУТРИ РАМКИ (самый нижний слой) */
+    url("./assets/background.png") center / cover no-repeat;
   border: 1px solid rgba(255,106,31,.22);
   box-shadow: var(--shadow);
   border-radius: var(--radius);
@@ -209,6 +224,39 @@ a,button,input,textarea,select{ touch-action: manipulation; }
   z-index: 6;
 }
 
+/* ===== КНОПКА ПРАВИЛ (ТОЛЬКО ИКОНКА, БЕЗ ПЛАШКИ) ===== */
+.rules-btn{
+  position:absolute;
+  left: 10px;
+  top: 8px;
+  width: 30px;
+  height: 30px;
+  border: none;
+  background: transparent;
+  box-shadow: none;
+  padding: 0;
+  z-index: 6;
+}
+.rules-btn::before{
+  content:"";
+  position:absolute;
+  inset: 0;
+  background: var(--iconTint);
+  opacity: .95;
+  filter:
+    drop-shadow(0 0 10px rgba(255,106,31,.45))
+    drop-shadow(0 0 18px rgba(255,43,22,.22));
+  -webkit-mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+  mask-position: center;
+  mask-repeat: no-repeat;
+  mask-size: contain;
+  -webkit-mask-image: url("./assets/rules.svg");
+  mask-image: url("./assets/rules.svg");
+}
+.rules-btn:active{ transform: translateY(1px); }
+
 /* сама иконка */
 .lock::before{
   content:"";
@@ -262,6 +310,17 @@ a,button,input,textarea,select{ touch-action: manipulation; }
 /* БОЙ: меньше зазор между панелями (чтобы не было "пустоты") */
 #page-boy .panel + .panel{ margin-top: 4px; }
 
+/* БОЙ: убираем микро-скролл и пустоту перед нижним меню (ТОЛЬКО тут) */
+/* уменьшаем вертикальные "проставки" (в html они style="height:8px") */
+#page-boy div[style*="height:8px"]{
+  height: 4px !important;
+}
+
+/* съедаем часть padding-bottom у .content, чтобы не было пустого низа */
+#page-boy .panel.panel-nohead{
+  margin-bottom: -18px;
+}
+
 /* Панель без заголовка (убрали panel-h у быстрых атак) */
 .panel-nohead .panel-b{ padding-top: 10px; padding-bottom: 10px; }
 /* УРОВЕНЬ компактнее по вертикали */
@@ -298,7 +357,21 @@ a,button,input,textarea,select{ touch-action: manipulation; }
   min-height: 62px;
 }
 .kpi .k{ font-size: 11px; color: var(--muted); text-align:center; }
-.kpi .v{ font-size: 20px; font-weight: 950; margin-top: 2px; color: rgba(255,235,200,.94); }
+.kpi .v{
+  font-size: var(--numBoy);
+  font-weight: 1000;
+  margin-top: 6px;
+  text-align: center;
+  color: rgba(255,250,225,.98);
+  letter-spacing: .02em;
+  line-height: 1;
+  text-shadow:
+    0 2px 0 rgba(0,0,0,.55),
+    0 10px 18px rgba(0,0,0,.45),
+    0 0 14px var(--numGlow1),
+    0 0 24px var(--numGlow2);
+  -webkit-text-stroke: .35px rgba(0,0,0,.28);
+}
 
 /* KPI как единый блок: без "внутреннего квадрата" */
 .kpi .field{
@@ -306,16 +379,28 @@ a,button,input,textarea,select{ touch-action: manipulation; }
   padding: 0;
   border: none;
   background: transparent;
-  text-align:center;
-  font-size: 26px;
+  text-align: center;
+  font-size: var(--numBoy);
   font-weight: 1000;
-  color: rgba(255,235,200,.96);
+  color: rgba(255,250,225,.98);
+  letter-spacing: .02em;
+  line-height: 1;
+  text-shadow:
+    0 2px 0 rgba(0,0,0,.55),
+    0 10px 18px rgba(0,0,0,.45),
+    0 0 14px var(--numGlow1),
+    0 0 24px var(--numGlow2);
+  -webkit-text-stroke: .35px rgba(0,0,0,.28);
 }
 .kpi .field:disabled{ opacity: .55; }
 
 .kpi-mini{ min-height: 56px; padding: 10px 8px; }
 .kpi-mini .k{ font-size: 10px; }
-.kpi-mini .v{ font-size: 22px; margin-top: 6px; text-align:center; }
+.kpi-mini .v{
+  font-size: var(--numBoy);
+  margin-top: 6px;
+  text-align: center;
+}
 
 .field{
   width: 100%;
@@ -349,12 +434,17 @@ a,button,input,textarea,select{ touch-action: manipulation; }
 }
 .atk-row input{
   width: 100%;
-  padding: 8px 8px;            /* ниже по высоте */
+  padding: 8px 8px;
   border: 1px solid rgba(255,106,31,.18);
   background: rgba(0,0,0,.20);
-  color: rgba(255,235,200,.92);
-  font-weight: 900;
-  font-size: 14px;
+  color: rgba(255,250,225,.96);
+  font-weight: 1000;
+  font-size: var(--numBoyAtk);
+  letter-spacing: .01em;
+  text-shadow:
+    0 1px 0 rgba(0,0,0,.55),
+    0 0 10px rgba(255,106,31,.12);
+  -webkit-text-stroke: .25px rgba(0,0,0,.22);
 }
 /* === Быстрые атаки: без внешней рамки панели === */
 #page-boy .panel.panel-nohead{
@@ -435,11 +525,20 @@ a,button,input,textarea,select{ touch-action: manipulation; }
   width: 100%;
   border: none;
   background: transparent;
-  text-align:center;
-  font-size: 30px;
+  text-align: center;
+  font-size: var(--numAbil);
   font-weight: 1000;
-  color: rgba(255,235,200,.96);
-  outline:none;
+  color: rgba(255,250,225,.98);
+  letter-spacing: .02em;
+  line-height: 1;
+  outline: none;
+
+  text-shadow:
+    0 2px 0 rgba(0,0,0,.55),
+    0 12px 22px rgba(0,0,0,.45),
+    0 0 14px var(--numGlow1),
+    0 0 24px var(--numGlow2);
+  -webkit-text-stroke: .35px rgba(0,0,0,.28);
 }
 .ability-score:disabled{ opacity: .55; }
 .ability .mod{
@@ -459,6 +558,10 @@ a,button,input,textarea,select{ touch-action: manipulation; }
   justify-content:center;
   font-weight: 1000;
   color: rgba(255,235,200,.98);
+    text-shadow: 0 1px 0 rgba(0,0,0,.55), 0 0 14px rgba(255,106,31,.16);
+  -webkit-text-stroke: .25px rgba(0,0,0,.22);
+  letter-spacing: .03em;
+
 }
 
 /* ===== НАВЫКИ ===== */
@@ -550,26 +653,87 @@ a,button,input,textarea,select{ touch-action: manipulation; }
 /* Кнопки уровня (-/+) с иконками */
 .levelbar{ display:flex; flex-direction:column; align-items:center; gap:4px; margin-left:auto; }
 .lvl-label{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap: 8px;
+
   font-size: 11px;
   color: var(--muted2);
   letter-spacing: .18em;
   font-weight: 900;
   margin: 0;
 }
+
+.lvl-help{
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,106,31,.24);
+  background:
+    radial-gradient(40px 26px at 50% 120%, rgba(255,43,22,.22), transparent 62%),
+    rgba(0,0,0,.22);
+  color: rgba(255,235,200,.95);
+  font-weight: 1000;
+  line-height: 1;
+  letter-spacing: 0;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:
+    0 10px 22px rgba(0,0,0,.35),
+    inset 0 0 0 1px rgba(0,0,0,.45);
+}
+.lvl-help:active{ transform: translateY(1px); }
+
+/* Таблица опыта в модалке */
+.xp-table{
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 6px;
+  font-size: 12px;
+}
+.xp-table th, .xp-table td{
+  border: 1px solid rgba(255,106,31,.14);
+  padding: 6px 6px;
+}
+.xp-table th{
+  color: rgba(255,235,200,.92);
+  font-weight: 1000;
+  background: rgba(0,0,0,.16);
+}
+.xp-table td{
+  color: rgba(255,235,200,.86);
+}
+.xp-table td:nth-child(1){ width: 44%; }
+.xp-table td:nth-child(2){ width: 20%; text-align:center; font-weight: 1000; }
+.xp-table td:nth-child(3){ width: 36%; text-align:center; font-weight: 1000; }
 .lvl-ctrl{ display:flex; align-items:center; gap:8px; }
 
 .lvl-input{
-  width: 44px; /* ровно под 2 цифры */
+  width: 54px;
   text-align:center;
   border: none;
   background: transparent;
-  color: rgba(255,235,200,.95);
+  color: rgba(255,250,225,.99);
   font-weight: 1000;
-  font-size: 18px;
-  padding: 2px 0;
+  font-size: 28px;
+  padding: 0;
+  line-height: 1;
   outline: none;
   -webkit-appearance: none;
   appearance: none;
+
+  /* “артефактная” цифра уровня */
+  letter-spacing: .06em;
+  text-shadow:
+    0 2px 0 rgba(0,0,0,.65),
+    0 10px 22px rgba(0,0,0,.55),
+    0 0 18px rgba(255,223,143,.22),
+    0 0 34px rgba(255,106,31,.24),
+    0 0 60px rgba(255,43,22,.14);
+  -webkit-text-stroke: .5px rgba(0,0,0,.34);
+  filter: saturate(1.08) contrast(1.08);
 }
 
 .lvl-btn{
@@ -616,7 +780,7 @@ a,button,input,textarea,select{ touch-action: manipulation; }
   position:absolute;
   inset: 0px;                 /* меньше inset = больше иконка */
   background: var(--iconTint);
-  opacity: .25;               /* было .10 — теперь реально видно */
+  opacity: .40;               /* было .10 — теперь реально видно */
   pointer-events:none;
   filter:
     drop-shadow(0 0 12px rgba(255,106,31,.35))
@@ -676,7 +840,7 @@ a,button,input,textarea,select{ touch-action: manipulation; }
   position:absolute;
   inset: 0px 0px 15px;        /* больше площадь под иконку */
   background: var(--iconTint);
-  opacity: .20;               /* было .08 */
+  opacity: .35;               /* было .08 */
   pointer-events:none;
   filter:
     drop-shadow(0 0 12px rgba(255,106,31,.32))
@@ -711,4 +875,506 @@ a,button,input,textarea,select{ touch-action: manipulation; }
 .ability[data-abil="харизма"]::before{
   -webkit-mask-image: url("./assets/icons/woman_elf.svg");
   mask-image: url("./assets/icons/woman_elf.svg");
+}
+/* =========================
+   ИНВЕНТАРЬ (иконки-вкладки + список)
+   ========================= */
+
+.inv{ padding: 10px; }
+
+/* вкладки-иконки: 7 кнопок в ряд, зазор между рамками 1px */
+.inv-tabs{
+  display:grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 1px; /* ✅ между рамками 1 пиксель */
+  padding: 0;
+  background: rgba(255,177,89,.10); /* линия между рамками */
+  border: 1px solid rgba(255,106,31,.18);
+}
+
+.inv-tab{
+  height: 46px;
+  border: 1px solid rgba(255,106,31,.14);
+  background: rgba(0,0,0,.28);
+  padding: 0;
+  position: relative;
+}
+
+.inv-tab.is-active{
+  background:
+    radial-gradient(220px 80px at 50% 120%, rgba(255,43,22,.22), transparent 62%),
+    rgba(0,0,0,.36);
+  border-color: rgba(255,106,31,.32);
+}
+
+.inv-tab__icon{
+  display:block;
+  width: 100%;
+  height: 100%;
+  background: var(--iconTint);
+  opacity: .96;
+  filter:
+    drop-shadow(0 0 10px rgba(255,106,31,.35))
+    drop-shadow(0 0 18px rgba(255,43,22,.16));
+  -webkit-mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-size: 26px 26px;
+  mask-position: center;
+  mask-repeat: no-repeat;
+  mask-size: 26px 26px;
+}
+
+/* иконки из assets/inventory */
+.inv-ico-money{
+  -webkit-mask-image: url("./assets/inventory/coin.svg");
+  mask-image: url("./assets/inventory/coin.svg");
+}
+.inv-ico-weapons{
+  -webkit-mask-image: url("./assets/inventory/swords.svg");
+  mask-image: url("./assets/inventory/swords.svg");
+}
+.inv-ico-armor{
+  -webkit-mask-image: url("./assets/inventory/helmet.svg");
+  mask-image: url("./assets/inventory/helmet.svg");
+}
+.inv-ico-accessories{
+  -webkit-mask-image: url("./assets/inventory/ring.svg");
+  mask-image: url("./assets/inventory/ring.svg");
+}
+.inv-ico-potions{
+  -webkit-mask-image: url("./assets/inventory/potion.svg");
+  mask-image: url("./assets/inventory/potion.svg");
+}
+.inv-ico-scrolls{
+  -webkit-mask-image: url("./assets/inventory/scroll.svg");
+  mask-image: url("./assets/inventory/scroll.svg");
+}
+.inv-ico-other{
+  -webkit-mask-image: url("./assets/inventory/box.svg");
+  mask-image: url("./assets/inventory/box.svg");
+}
+
+.inv-body{
+  position: relative;
+  margin-top: 10px;
+  min-height: 220px;
+}
+
+.inv-list{
+  display:flex;
+  flex-direction:column;
+  gap: 8px;
+}
+/* деньги */
+.inv-money{
+  display:grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.inv-money__cell{
+  border: 1px solid rgba(255,106,31,.14);
+  background: rgba(0,0,0,.20);
+  padding: 10px;
+}
+
+.inv-money__label{
+  font-size: 12px;
+  font-weight: 1000;
+  color: rgba(255,235,200,.78);
+  margin-bottom: 6px;
+  text-align: center;
+}
+
+.inv-money__input{
+  width: 100%;
+  height: 40px;
+  text-align: center;
+  font-size: 20px;
+  font-weight: 1000;
+  border: 1px solid rgba(255,106,31,.18);
+  background: rgba(0,0,0,.25);
+  color: rgba(255,235,200,.96);
+  outline: none;
+}
+
+.inv-empty{
+  padding: 12px;
+  border: 1px dashed rgba(255,177,89,.22);
+  background: rgba(0,0,0,.18);
+  color: rgba(255,235,200,.68);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+/* предмет */
+.inv-item{
+  width: 100%;
+  text-align: left;
+  border: 1px solid rgba(255,106,31,.14);
+  background:
+    radial-gradient(420px 120px at 50% 0%, rgba(255,177,89,.06), transparent 60%),
+    rgba(0,0,0,.22);
+  padding: 10px 10px;
+  color: rgba(255,235,200,.94);
+  font-weight: 900;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap: 10px;
+}
+
+.inv-item__title{
+  font-weight: 1000;
+  letter-spacing: .01em;
+}
+
+.inv-item__hint{
+  font-size: 11px;
+  color: rgba(255,235,200,.62);
+  font-weight: 800;
+  margin-top: 2px;
+}
+
+.inv-item:active{ transform: translateY(1px); }
+
+/* кнопка + */
+.inv-add{
+  position:absolute;
+  right: 0;
+  bottom: 0;
+  width: 52px;
+  height: 52px;
+  border: 1px solid rgba(255,106,31,.26);
+  background:
+    radial-gradient(240px 90px at 50% 120%, rgba(255,43,22,.22), transparent 62%),
+    rgba(0,0,0,.28);
+  box-shadow:
+    0 14px 34px rgba(0,0,0,.42),
+    inset 0 0 0 1px rgba(255,177,89,.10);
+}
+
+.inv-add__plus{
+  display:block;
+  font-size: 34px;
+  line-height: 52px;
+  text-align:center;
+  color: rgba(255,250,225,.98);
+  text-shadow:
+    0 2px 0 rgba(0,0,0,.55),
+    0 0 18px rgba(255,106,31,.22);
+  -webkit-text-stroke: .35px rgba(0,0,0,.26);
+}
+.inv-add:active{ transform: translateY(1px) scale(.98); }
+
+/* модалка */
+.inv-modal{
+  position: fixed;
+  inset: 0;
+  display:none;
+  z-index: 999;
+}
+.inv-modal.is-open{ display:block; }
+
+.inv-modal__backdrop{
+  position:absolute; inset:0;
+  background: rgba(0,0,0,.62);
+}
+
+.inv-modal__card{
+  position:absolute;
+  left: 12px;
+  right: 12px;
+
+  top: 10%;
+  max-height: 78vh;
+  overflow: auto;
+
+  border: 1px solid rgba(255,106,31,.22);
+  background:
+    radial-gradient(520px 220px at 50% 0%, rgba(255,177,89,.10), transparent 60%),
+    linear-gradient(180deg, rgba(22,9,10,.92), rgba(12,7,8,.92));
+  box-shadow: var(--shadow2);
+  padding: 10px;
+}
+
+.inv-modal__title{
+  font-weight: 1000;
+  margin-bottom: 10px;
+  color: rgba(255,235,200,.98);
+}
+
+.inv-modal__content{
+  color: rgba(255,235,200,.86);
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.inv-modal__actions{
+  display:flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.inv-modal__actions .btn{
+  flex: 1;
+  padding: 10px 10px;
+}
+.inv-modal__field{
+  width: 100%;
+  margin-top: 8px;
+  padding: 10px 10px;
+  border: 1px solid rgba(255,106,31,.18);
+  background: rgba(0,0,0,.25);
+  color: rgba(255,235,200,.96);
+  outline: none;
+  border-radius: 0;
+  font-weight: 900;
+}
+.inv-modal__textarea{
+  min-height: 90px;
+  resize: none;
+}
+
+@media (max-width: 520px){
+
+  :root{ --pad: 0px; }
+
+  body{ padding: 0; }
+
+  .wrap{
+    max-width: none;
+    margin: 0;
+    min-height: 100dvh;
+  }
+
+  .frame{
+    min-height: 100dvh;
+    border-radius: 0;
+  }
+
+  .content{
+    padding-left: 12px;
+    padding-right: 12px;
+    padding-bottom: 64px;
+  }
+
+  .tabs.inframe{
+    padding-left: 12px;
+    padding-right: 12px;
+    padding-bottom: calc(10px + env(safe-area-inset-bottom));
+  }
+
+  /* ВАЖНО: внешний фон на body на мобиле выключаем,
+     потому что теперь фон уже внутри рамки */
+  body::before{ display:none; }
+}
+/* =========================
+   МАГИЯ — ячейки (пипы)
+   ========================= */
+
+.mag{ padding: 10px; }
+
+.mag-head{
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.mag-head__title{
+  font-weight: 1000;
+  letter-spacing: .02em;
+  color: rgba(255,235,200,.95);
+}
+
+.mag-table{
+  display:flex;
+  flex-direction:column;
+  gap: 8px;
+}
+
+.mag-row{
+  display:grid;
+  grid-template-columns: 48px 1fr auto;
+  align-items:center;
+  gap: 10px;
+  padding: 10px 10px;
+  border: 1px solid rgba(255,106,31,.14);
+  background: rgba(0,0,0,.18);
+}
+
+.mag-lvl{
+  font-weight: 1000;
+  color: rgba(255,235,200,.92);
+  letter-spacing: .04em;
+}
+
+.mag-pips{
+  display:flex;
+  flex-wrap:wrap;
+  gap: 6px;
+  min-height: 18px;
+}
+
+.mag-pip{
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,177,89,.48);
+  background: rgba(0,0,0,.24);
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,.55);
+  position: relative;
+  padding: 0;
+}
+
+.mag-pip.is-used{
+  background:
+    radial-gradient(circle at 35% 35%, rgba(255,223,143,.92), rgba(255,106,31,.82) 58%, rgba(70,15,10,.92) 100%);
+  border-color: rgba(255,223,143,.95);
+  box-shadow:
+    0 0 10px rgba(255,106,31,.45),
+    0 0 18px rgba(255,177,89,.22),
+    inset 0 0 0 2px rgba(0,0,0,.35);
+}
+.mag-pip.is-used::after{
+  content:"";
+  position:absolute;
+  inset: 5px;
+  border-radius: 999px;
+  background: rgba(0,0,0,.35);
+  box-shadow: 0 0 8px rgba(0,0,0,.25);
+  opacity: .9;
+}
+
+.mag-ctrl{
+  display:flex;
+  gap: 8px;
+}
+.mag-btn{
+  width: 34px;
+  height: 34px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,106,31,.22);
+  background:
+    radial-gradient(150px 110px at 50% 130%, rgba(255,43,22,.14), transparent 58%),
+    rgba(0,0,0,.22);
+  box-shadow:
+    0 10px 22px rgba(0,0,0,.36),
+    inset 0 0 0 1px rgba(255,177,89,.10);
+  position: relative;
+  padding: 0;
+}
+.mag-btn::before{
+  content:"";
+  position:absolute;
+  inset: 7px;
+  background: var(--iconTint);
+  opacity: 1;
+  filter: drop-shadow(0 0 10px rgba(255,106,31,.30));
+  -webkit-mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+  mask-position: center;
+  mask-repeat: no-repeat;
+  mask-size: contain;
+}
+.mag-btn.minus::before{
+  -webkit-mask-image: url("./assets/icons/shield_minus.svg");
+  mask-image: url("./assets/icons/shield_minus.svg");
+}
+.mag-btn.plus::before{
+  -webkit-mask-image: url("./assets/icons/shield_plus.svg");
+  mask-image: url("./assets/icons/shield_plus.svg");
+}
+.mag-btn:active{ transform: translateY(1px); }
+/* =========================
+   МАГИЯ — wheel выбора уровня
+   ========================= */
+.mag-wheel{
+  position: relative;
+  height: 176px;
+  overflow-y: auto;
+  scroll-snap-type: y mandatory;
+  border: 1px solid rgba(255,106,31,.18);
+  background: rgba(0,0,0,.22);
+}
+
+.mag-wheel__spacer{ height: 66px; } /* чтобы центр совпал */
+
+.mag-wheel__item{
+  height: 44px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  scroll-snap-align: center;
+  font-weight: 1000;
+  color: rgba(255,235,200,.62);
+  letter-spacing: .02em;
+  user-select:none;
+}
+
+.mag-wheel__item.is-active{
+  color: rgba(255,250,225,.98);
+  text-shadow:
+    0 2px 0 rgba(0,0,0,.55),
+    0 0 18px rgba(255,106,31,.20);
+}
+
+.mag-wheel__frame{
+  position:absolute;
+  left: 10px;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 44px;
+  border: 1px solid rgba(255,177,89,.22);
+  background: rgba(255,106,31,.06);
+  pointer-events:none;
+}
+
+/* =========================
+   МАГИЯ — вкладки
+   ========================= */
+
+.mag-tabs{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  margin-bottom: 10px;
+  border: 1px solid rgba(255,106,31,.18);
+  background: rgba(255,177,89,.10);
+}
+
+.mag-tab{
+  height: 46px;
+  border: none;
+  background: rgba(0,0,0,.28);
+  color: rgba(255,235,200,.92);
+  font-weight: 900;
+}
+
+.mag-tab.is-active{
+  background:
+    radial-gradient(220px 80px at 50% 120%, rgba(255,43,22,.22), transparent 62%),
+    rgba(0,0,0,.38);
+}
+
+.mag-page{ display:none; }
+.mag-page.is-active{ display:block; }
+
+.mag-spells-list{
+  display:flex;
+  flex-direction:column;
+  gap: 8px;
+}
+/* ✅ чтобы кнопка "+" позиционировалась внутри страницы заклинаний */
+#magPageSpells{
+  position: relative;
+  padding-bottom: 70px; /* место под + */
+}
+
+/* чуть воздух, чтобы список не прятался под кнопкой */
+.mag-spells-list{
+  min-height: 220px;
 }

@@ -1,4 +1,4 @@
-const CACHE = "hero_list_v5";
+const CACHE = "hero_list_v6";
 const ASSETS = [
   "./",
   "./index.html",

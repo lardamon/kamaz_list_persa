@@ -15,7 +15,8 @@
     <div class="frame">
       <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
 
-      <div class="topbar">
+<div class="topbar">
+        <button type="button" class="rules-btn" id="rulesBtn" aria-label="Формулы"></button>
         <div class="line"></div><div class="gem"></div><div class="line"></div>
 <button type="button" class="lock unlocked" id="замок" aria-label="Замок (блокировка редактирования)"></button>
       </div>
@@ -25,11 +26,14 @@
         <section id="page-boy" class="page active">
 <!-- УРОВЕНЬ — без рамки, отдельным блоком -->
 <div class="levelbar top-level">
-  <div class="lvl-label">УРОВЕНЬ</div>
+  <div class="lvl-label">
+    УРОВЕНЬ
+    <button class="lvl-help" id="xpHelpBtn" type="button" aria-label="Таблица опыта">?</button>
+  </div>
   <div class="lvl-ctrl">
-    <button type="button" class="lvl-btn lockable icon-minus" id="уровень_минус" aria-label="Уменьшить уровень"></button>
-    <input id="уровень" class="lvl-input" value="3" readonly tabindex="-1" />
-    <button type="button" class="lvl-btn lockable icon-plus" id="уровень_плюс" aria-label="Увеличить уровень"></button>
+    <button class="lvl-btn icon-minus lockable" id="уровень_минус" type="button"></button>
+    <input id="уровень" class="lvl-input" type="text" value="2" inputmode="none" />
+    <button class="lvl-btn icon-plus lockable" id="уровень_плюс" type="button"></button>
   </div>
 </div>
 
@@ -101,7 +105,7 @@
 
         <!-- ВКЛАДКА: ХАРАКТЕРИСТИКИ -->
         <section id="page-har" class="page">
-          <div class="panel lite">
+<div class="panel lite skills-panel">
             <div class="panel-h">
               <span>Характеристики</span>
               <span class="small">моды считаются автоматически</span>
@@ -154,33 +158,86 @@
           </div>
         </section>
 
-        <!-- ВКЛАДКА: ИНВЕНТАРЬ -->
-        <section id="page-inv" class="page">
-          <div class="panel">
-            <div class="panel-h">
-              <span>Инвентарь</span>
-              <span class="small">оружие/предметы/хилки</span>
-            </div>
-            <div class="panel-b small">
-              Здесь будет список предметов (название, количество, заметка). Хилки — тоже здесь.
-              Чуть позже добавим отдельный блок “Оружие” и “Броня”.
-            </div>
-          </div>
-        </section>
+<!-- ВКЛАДКА: ИНВЕНТАРЬ -->
+<section id="page-inv" class="page">
+  <div class="panel lite">
+    <div class="panel-b inv">
+      <!-- ИКОНКИ-ВКЛАДКИ -->
+      <div class="inv-tabs" id="invTabs" role="tablist" aria-label="Категории инвентаря">
+        <button class="inv-tab is-active" type="button" data-inv-tab="money" aria-label="Деньги">
+          <span class="inv-tab__icon inv-ico-money" aria-hidden="true"></span>
+        </button>
+        <button class="inv-tab" type="button" data-inv-tab="weapons" aria-label="Оружие">
+          <span class="inv-tab__icon inv-ico-weapons" aria-hidden="true"></span>
+        </button>
+        <button class="inv-tab" type="button" data-inv-tab="armor" aria-label="Броня">
+          <span class="inv-tab__icon inv-ico-armor" aria-hidden="true"></span>
+        </button>
+        <button class="inv-tab" type="button" data-inv-tab="accessories" aria-label="Аксессуары">
+          <span class="inv-tab__icon inv-ico-accessories" aria-hidden="true"></span>
+        </button>
+        <button class="inv-tab" type="button" data-inv-tab="potions" aria-label="Зелья">
+          <span class="inv-tab__icon inv-ico-potions" aria-hidden="true"></span>
+        </button>
+        <button class="inv-tab" type="button" data-inv-tab="scrolls" aria-label="Свитки">
+          <span class="inv-tab__icon inv-ico-scrolls" aria-hidden="true"></span>
+        </button>
+        <button class="inv-tab" type="button" data-inv-tab="other" aria-label="Прочее">
+          <span class="inv-tab__icon inv-ico-other" aria-hidden="true"></span>
+        </button>
+      </div>
 
-        <!-- ВКЛАДКА: МАГИЯ -->
-        <section id="page-mag" class="page">
-          <div class="panel">
-            <div class="panel-h">
-              <span>Магия</span>
-              <span class="small">ячейки и список</span>
-            </div>
-            <div class="panel-b small">
-              Тут будут: ячейки заклинаний по уровням (кружочки), “потрачено/доступно”, и список известных/подготовленных.
-              Без описаний, только названия.
-            </div>
-          </div>
-        </section>
+      <!-- СПИСОК -->
+      <div class="inv-body">
+        <div class="inv-list" id="invList"></div>
+
+        <button class="inv-add lockable" id="invAddBtn" type="button" aria-label="Добавить предмет">
+          <span class="inv-add__plus" aria-hidden="true">+</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ВКЛАДКА: МАГИЯ -->
+<!-- ВКЛАДКА: МАГИЯ -->
+<section id="page-mag" class="page">
+  <div class="panel lite">
+    <div class="panel-b mag" id="magRoot">
+
+      <!-- ВКЛАДКИ МАГИИ -->
+      <div class="mag-tabs" id="magTabs">
+        <button class="mag-tab is-active" data-mag-tab="slots" type="button">Ячейки</button>
+        <button class="mag-tab" data-mag-tab="spells" type="button">Заклинания</button>
+      </div>
+
+      <!-- СТРАНИЦА: ЯЧЕЙКИ -->
+      <div class="mag-page is-active" id="magPageSlots">
+        <div class="mag-table" id="magSlots"></div>
+      </div>
+
+      <!-- СТРАНИЦА: ЗАКЛИНАНИЯ -->
+      <div class="mag-page" id="magPageSpells">
+        <div class="mag-spells-list" id="magSpellList"></div>
+
+        <button class="inv-add lockable" id="magAddSpellBtn" type="button" aria-label="Добавить заклинание">
+          <span class="inv-add__plus">+</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+</section>
+<!-- МОДАЛКА (универсальная) — ГЛОБАЛЬНО, чтобы работала во всех вкладках -->
+<div class="inv-modal" id="invModal" aria-hidden="true">
+  <div class="inv-modal__backdrop" data-inv-close></div>
+  <div class="inv-modal__card" role="dialog" aria-modal="true" aria-labelledby="invModalTitle">
+    <div class="inv-modal__title" id="invModalTitle"></div>
+    <div class="inv-modal__content" id="invModalContent"></div>
+    <div class="inv-modal__actions" id="invModalActions"></div>
+  </div>
+</div>
 
       </div>
 
